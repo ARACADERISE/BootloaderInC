@@ -1,8 +1,8 @@
 ENTRY(main)
 SECTIONS
 {
-    . = 0x8500;
-    .text : AT(0x8500)
+    . = 0x9100;
+    .text : AT(0x9100)
     {
         *(__start*);
         *(.text*);
@@ -16,5 +16,5 @@ SECTIONS
         *(COMMON*);
     }
 
-    .sig : AT(0x8D00) {SHORT(0x0);}
+    .sig : AT(0x8F00) {SHORT(0x0);}
 }

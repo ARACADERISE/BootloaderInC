@@ -4,17 +4,16 @@ use16
 ; =======================
 ;       16-bit code
 ; =======================
-; TODO: Update name of file.
 ;
 
 %include "protocol/tools/print.asm"
 %include "protocol/extra/tests.asm"
 
-%define clean_gdt           0x0
-%define bit32_bit16_gdt     0x1
-%define bit32_only_gdt      0x2
-%define b8000_vid_mode      0x3
-%define vesa_vid_mode       0x4
+%define clean_gdt           0x1
+%define bit32_bit16_gdt     0x2
+%define bit32_only_gdt      0x3
+%define b8000_vid_mode      0x4
+%define vesa_vid_mode       0x5
 
 %define DEFAULT_ALL                 clean_gdt | b8000_vid_mode
 %define CLEAN_GDT_DEF_VID_MODE      clean_gdt | b8000_vid_mode
@@ -64,12 +63,17 @@ init_bootloader:
 
     cmp ah, BIT32_ONLY_VESA_VID_MODE
     je .bit32_only_vesa_vid_mode
+
+    jmp .error
 .defall:
-    mov eax, [g_GDTDesc]
+    mov eax, [def_GDTDesc]
     mov [g_GDT32_16_desc_addr], eax
 
-    mov eax, [g_GDT32_16]
+    mov eax, [g_GDT]
     mov [g_GDT32_16_address], eax
+
+    mov eax, 1                          ; 1 meaning: there is an already-working GDT loaded into  memory
+    mov [g_GDT_status], eax
 
     ret
 .clean_gdt_vesa_vid_mode:
@@ -79,19 +83,25 @@ init_bootloader:
 
     ret
 .bit32_bit16_def_vid_mode:
-    mov eax, [def_GDTDesc]
+
+    mov eax, [g_GDT32_16]
+    mov [g_GDT32_16_address], eax
+
+    mov eax, [g_GDTDesc]
     mov [g_GDT32_16_desc_addr], eax
 
-    mov eax, [g_GDT]
-    mov [g_GDT32_16_address], eax
+    mov eax, 0
+    mov [g_GDT_status], eax
 
     ret
 .bit32_bit16_vesa_vid_mode:
-    mov eax, [def_GDTDesc]
-    mov [g_GDT32_16_desc_addr], eax
 
-    mov eax, [g_GDT]
+    mov eax, 0
+    mov [g_GDT32_16_desc_addr], eax
     mov [g_GDT32_16_address], eax
+
+    mov eax, 0
+    mov [g_GDT_status], eax
 
     ret
 .bit32_only_def_vid_mode:
@@ -106,7 +116,12 @@ init_bootloader:
     int 0x10
 
     ret
+.error:
+    mov ah, 0x0E
+    mov al, 'E'
+    int 0x10
 
-    ret
+    cli
+    hlt
 
 %include "protocol/gdt/gdt_ideals.asm"

@@ -6,18 +6,23 @@
 #define gdt_bit32_bit16         0x3216
 #define gdt_bit32_only          0x32
 
+// TODO: Put this elsewhere. For now, it works lol
+static unsigned char *gdt_status = (unsigned char *)0xB000;
+
+extern void print_str();
+
 /* Enum of different types of GDT. */
 enum GDT_TYPE {
-    clean_gdt           =   0x0,
-    bit32_bit16_gdt     =   0x1,
-    bit32_only_gdt      =   0x2,
+    clean_gdt           =   0x1,
+    bit32_bit16_gdt     =   0x2,
+    bit32_only_gdt      =   0x3,
 };
 
 /* Video mode? */
 enum VID_MODE
 {
-    B8000               =   0x3,          // Default
-    VESA_VID_MODE       =   0x4,
+    B8000               =   0x4,          // Default
+    VESA_VID_MODE       =   0x5,
 };
 
 /* Constants for above enums. */
@@ -37,11 +42,6 @@ typedef struct gdt_desc
     uint32      address;
 } packed _gdt_desc;
 
-/* Setting up the description of the GDT. */
-#define setup_gdt_desc(gdtDesc, gdt)     \
-    gdtDesc->size = (uint16)sizeof(*gdt);\
-    gdtDesc->address = (uint32)gdt;
-
 #ifdef bit32_bit16_GDT
 
     /* If the GDT has 16-bit segments, we want to make sure we know this. */
@@ -50,132 +50,135 @@ typedef struct gdt_desc
     typedef struct GDT
     {
         /* 32-bit: null descriptor. */
-        long long           null_desc;
+        unsigned long long  null_desc;
 
         /* 32-bit: code segment. */
-        int16          code32_limit;          // 0xFFFFF for full 32-bit range
-        int16          code32_base;
-        int8           code32_base2;
-        int8           code32_access;         // access (present, ring 0, code segment, executable, direction 0, readable)
-        int8           code32_gran;           // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
-        int8           code32_base_high;
+        uint16              code32_limit;          // 0xFFFFF for full 32-bit range
+        uint16              code32_base;
+        uint8               code32_base2;
+        uint8               code32_access;         // access (present, ring 0, code segment, executable, direction 0, readable)
+        uint8               code32_gran;           // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
+        uint8               code32_base_high;
 
         /* 32-bit: data segment. */
-        int16          data32_limit;         // 0xFFFFF for full 32-bit range
-        int16          data32_base;
-        int8           data32_base2;
-        int8           data32_access;        // access (present, ring 0, code segment, executable, direction 0, readable)
-        int8           data32_gran;          // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
-        int8           data32_base_high;
+        uint16              data32_limit;         // 0xFFFFF for full 32-bit range
+        uint16              data32_base;
+        uint8               data32_base2;
+        uint8               data32_access;        // access (present, ring 0, code segment, executable, direction 0, readable)
+        uint8               data32_gran;          // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
+        uint8               data32_base_high;
 
         /* 16-bit: code segment. */
-        int16          code16_limit;         // should be 0xFFFFF(same as 32-bit code/data segments)
-        int16          code16_base;
-        int8           code16_base2;
-        int8           code16_access;       // access (present, ring 0, code segment, executable, direction 0, readable)
-        int8           code16_gran;         // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
-        int8           cod16_base_high;
+        uint16              code16_limit;         // should be 0xFFFFF(same as 32-bit code/data segments)
+        uint16              code16_base;
+        uint8               code16_base2;
+        uint8               code16_access;       // access (present, ring 0, code segment, executable, direction 0, readable)
+        uint8               code16_gran;         // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
+        uint8               code16_base_high;
 
         /* 16-bit: data segment. */
-        int16          data16_limit;         // should be 0xFFFFF(same as 32-bit code/data segments)
-        int16          data16_base;
-        int8           data16_base2;
-        int8           data16_access;       // access (present, ring 0, code segment, executable, direction 0, readable)
-        int8           data16_gran;         // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
-        int8           data16_base_high;
-    } packed _GDT;
+        uint16              data16_limit;         // should be 0xFFFFF(same as 32-bit code/data segments)
+        uint16              data16_base;
+        uint8               data16_base2;
+        uint8               data16_access;       // access (present, ring 0, code segment, executable, direction 0, readable)
+        uint8               data16_gran;         // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
+        uint8               data16_base_high;
+    } _GDT;
 
 #else
     /* 32-bit only GDT. */
     typedef struct GDT
     {
         /* 32-bit: null descriptor. */
-        uint8           null_desc[64];
+        unsigned long long  null_desc;
 
         /* 32-bit: code segment. */
-        uint16          code32_limit;          // 0xFFFFF for full 32-bit range
-        uint16          code32_base;
-        uint8           code32_base2;
-        uint8           code32_access;         // access (present, ring 0, code segment, executable, direction 0, readable)
-        uint8           code32_gran;           // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
-        uint8           code32_base_high;
+        uint16              code32_limit;          // 0xFFFFF for full 32-bit range
+        uint16              code32_base;
+        uint8               code32_base2;
+        uint8               code32_access;         // access (present, ring 0, code segment, executable, direction 0, readable)
+        uint8               code32_gran;           // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
+        uint8               code32_base_high;
 
         /* 32-bit: data segment. */
-        uint16          data32_limit;         // 0xFFFFF for full 32-bit range
-        uint16          data32_base;
-        uint8           data32_base2;
-        uint8           data32_access;        // access (present, ring 0, code segment, executable, direction 0, readable)
-        uint8           data32_gran;          // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
-        uint8           data32_base_high;
-    } packed _GDT;
+        uint16              data32_limit;         // 0xFFFFF for full 32-bit range
+        uint16              data32_base;
+        uint8               data32_base2;
+        uint8               data32_access;        // access (present, ring 0, code segment, executable, direction 0, readable)
+        uint8               data32_gran;          // granularity (4k pages, 32-bit pmode) + limit (bits 16-19)
+        uint8               data32_base_high;
+    } _GDT;
 #endif
 
+static _GDT *gdt = (_GDT *)0xA000;
+static _gdt_desc *gdtDesc = (_gdt_desc *)0xAA00;
+
+extern void save_gdt_and_load(_gdt_desc gdtDesc, _GDT gdt);
+
+void load_32bit()
+{
+    if(gdt == NULL || gdtDesc == NULL || (gdt == NULL && gdtDesc == NULL))
+    {
+        print_str("Error from `load_32bit`:\nThe gdt or gdt description is NULL :(");
+        __asm__("cli;hlt");
+    }
+
+    save_gdt_and_load(*gdtDesc, *gdt);
+}
+
+/* Setting up the description of the GDT. */
+static inline void setup_gdt_desc_and_load()
+{
 #ifdef default_gdt
+    if(*gdt_status == 0)
+    {
+        gdt->null_desc          = 0,
 
-    #ifdef has_rmode_access
-        /* Setup 32-bit/16-bit GDT. */
-        _GDT gdt = (_GDT) {
-            .null_desc          = {0},
+        /* 32-bit code segment. */
+        gdt->code32_limit       = 0xFFFF;
+        gdt->code32_base        = 0x0;
+        gdt->code32_base2       = 0x0;
+        gdt->code32_access      = 0b10011010;
+        gdt->code32_gran        = 0b11001111;
+        gdt->code32_base_high   = 0x0;
 
-            /* 32-bit code segment. */
-            .code32_limit       = 0xFFFF,
-            .code32_base        = 0x0,
-            .code32_base2       = 0x0,
-            .code32_access      = 0b10011010,
-            .code32_gran        = 0b11001111,
-            .code32_base_high   = 0x0, 
+        /* 32-bit data segment. */
+        gdt->data32_limit       = 0xFFFF;
+        gdt->data32_base        = 0x0;
+        gdt->data32_base2       = 0x0;
+        gdt->data32_access      = 0b10010010;
+        gdt->data32_gran        = 0b11001111;
+        gdt->data32_base_high   = 0x0;
 
-            /* 32-bit data segment. */
-            .data32_limit       = 0xFFFF,
-            .data32_base        = 0x0,
-            .data32_base2       = 0x0,
-            .data32_access      = 0b10010010,
-            .data32_gran        = 0b11001111,
-            .data32_base_high   = 0x0,
+        /* 16-bit code segment. */
+        gdt->code16_limit       = 0xFFFF;
+        gdt->code16_base        = 0x0;
+        gdt->code16_base2       = 0x0;
+        gdt->code16_access      = 0b10011010;
+        gdt->code16_gran        = 0b00001111;
+        gdt->code16_base_high    = 0x0;
 
-            /* 16-bit code segment. */
-            .code16_limit       = 0xFFFF,
-            .code16_base        = 0x0,
-            .code16_base2       = 0x0,
-            .code16_access      = 0b10011010,
-            .code16_gran        = 0b00001111,
-            .cod16_base_high    = 0x0,
+        /* 16-bit data segment. */
+        gdt->data16_limit       = 0xFFFF;
+        gdt->data16_base        = 0x0;
+        gdt->data16_base2       = 0x0;
+        gdt->data16_access      = 0b10010010;
+        gdt->data16_gran        = 0b00001111;
+        gdt->data16_base_high   = 0x0;
+    
+        gdtDesc->size = (uint16)sizeof(*gdt);
+        gdtDesc->address = (uint32)gdt;
+    }
+    load_32bit();
+#else
+    if(*gdt_status == 0)
+    {
+        print_str("Error in `setup_gdt_desc`:\nThere is no valid GDT loaded into memory. Please set one up :(");
+        __asm__("hlt");
+    }
 
-            /* 16-bit data segment. */
-            .data16_limit       = 0xFFFF,
-            .data16_base        = 0x0,
-            .data16_base2       = 0x0,
-            .data16_access      = 0b10010010,
-            .data16_gran        = 0b00001111,
-            .data16_base_high   = 0x0
-        };
-
-    #else
-        /* Setup 32-bit GDT. */
-        _GDT gdt = (_GDT) {
-            .null_desc          = {0},
-
-            /* 32-bit code segment. */
-            .code32_limit       = 0xFFFF,
-            .code32_base        = 0x0,
-            .code32_base2       = 0x0,
-            .code32_access      = 0b10011010,
-            .code32_gran        = 0b11001111,
-            .code32_base_high   = 0x0, 
-
-            /* 32-bit data segment. */
-            .data32_limit       = 0xFFFF,
-            .data32_base        = 0x0,
-            .data32_base2       = 0x0,
-            .data32_access      = 0b10010010,
-            .data32_gran        = 0b11001111,
-            .data32_base_high   = 0x0
-        };
-
-    #endif
-
-    _gdt_desc *gdtDesc = (_gdt_desc *) 0xAA00;
-
+    load_32bit();
 #endif
+}
 
 #endif

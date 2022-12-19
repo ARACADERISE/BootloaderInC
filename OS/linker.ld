@@ -13,9 +13,8 @@ SECTIONS
     {
         *(.bss*);
         *(.data*);
-        *(.rodata*);
         *(COMMON*);
     }
 
-    .sig : AT(0x8400) {SHORT(0x0);}
+    .sig : AT(0x8600) {SHORT(0x0);}
 }

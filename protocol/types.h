@@ -20,6 +20,7 @@ typedef unsigned long long  lsize;
 typedef uint8               bool;
 #define true                1
 #define false               0
+#define NULL                (void *)0
 
 /* Other useful stuff. */
 #define packed              __attribute__((packed))

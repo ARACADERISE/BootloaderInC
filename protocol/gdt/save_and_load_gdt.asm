@@ -1,6 +1,13 @@
 global save_gdt_and_load
 use16
 save_gdt_and_load:
+    mov eax, [g_GDT_status]
+    cmp eax, 0
+    je .load_new_gdt
+
+    cmp eax, 1
+    jmp .do_it
+.load_new_gdt:
     push ebp
     mov ebp, esp
 
@@ -31,11 +38,11 @@ save_gdt_and_load:
 .hl:
     jmp .hl
 .do_it:
-    mov eax, [def_GDTDesc]
-    mov [g_GDT32_16_desc_addr], eax
+    ;mov eax, [def_GDTDesc]
+    ;mov [g_GDT32_16_desc_addr], eax
 
-    mov eax, [g_GDT32_16]
-    mov [g_GDT32_16_address], eax
+    ;mov eax, [g_GDT32_16]
+    ;mov [g_GDT32_16_address], eax
 
     jmp load_gdt
 
