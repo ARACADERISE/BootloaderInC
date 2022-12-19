@@ -2,10 +2,10 @@ global load_gdt
 
 use16
 load_gdt:
-    mov eax, [g_GDT32_16_desc_addr]
-    mov [g_GDTDesc], eax
-    mov eax, [g_GDT32_16_address]
-    mov [g_GDT32_16], eax
+    ;mov eax, [g_GDT32_16_desc_addr]
+    ;mov [g_GDTDesc], eax
+    ;mov eax, [g_GDT32_16_address]
+    ;mov [g_GDT32_16], eax
     
     in al, 0x92
 	or al, 0x02

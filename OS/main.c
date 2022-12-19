@@ -19,7 +19,7 @@ extern void print();
 
 void __attribute__((section("__start"))) main()
 {
-    init_bootloader(BIT32_BIT16_DEF_VID_MODE);
+    init_bootloader(DEFAULT_ALL);
     //print_str("Second Stage :D\n\0");
 
     setup_gdt_desc_and_load();

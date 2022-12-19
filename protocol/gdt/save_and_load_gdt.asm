@@ -1,12 +1,18 @@
 global save_gdt_and_load
 use16
 save_gdt_and_load:
+
+    ; Do we need to load a already-working gdt into memory?
     mov eax, [g_GDT_status]
     cmp eax, 0
     je .load_new_gdt
 
+    ; Is there already a GDT in memory that the user put there?
     cmp eax, 1
-    jmp .do_it
+    je .set_it
+
+    ; If for some reason the gdt status is neither 1 or 0, error
+    jmp .gdt_error
 .load_new_gdt:
     push ebp
     mov ebp, esp
@@ -37,13 +43,9 @@ save_gdt_and_load:
     call print
 .hl:
     jmp .hl
+.set_it:
 .do_it:
-    ;mov eax, [def_GDTDesc]
-    ;mov [g_GDT32_16_desc_addr], eax
-
-    ;mov eax, [g_GDT32_16]
-    ;mov [g_GDT32_16_address], eax
 
     jmp load_gdt
 
-sum db "GDT error :(", 0x0
+sum db "Error loading the GDT :(", 0x0

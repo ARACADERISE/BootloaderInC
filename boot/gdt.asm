@@ -39,7 +39,7 @@ def_GDTDesc:
 
 g_GDT32_16_address     equ 0xA000
 g_GDT32_16_desc_addr   equ 0xAA00
-g_GDT_status:          equ 0xB000
+g_GDT_status:          equ 0xC000
 
 g_GDT32_16:      
             ; NULL descriptor
@@ -78,7 +78,7 @@ g_GDT32_16:
             .ddata16_base_high              db 0                        ; base high
 
 g_GDTDesc:
-    .size dw 0x1
+    .size dw 0x0
     .addr dd 0x0
 
 ;g_GDT32:      

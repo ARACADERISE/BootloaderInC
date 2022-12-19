@@ -1,8 +1,8 @@
 ENTRY(main)
 SECTIONS
 {
-    . = 0x9100;
-    .text : AT(0x9100)
+    . = 0x8500;
+    .text : AT(0x8500)
     {
         *(__start*);
         *(.text*);

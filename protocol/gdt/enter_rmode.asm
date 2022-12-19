@@ -1,4 +1,4 @@
-use16
+;use16
 global enter_rmode
 
 %macro x86_EnterRealMode 0
@@ -17,7 +17,7 @@ global enter_rmode
 
 .rmode:
     ; 4 - setup segments
-    mov ax, 0
+    mov ax, 0x0
     mov ds, ax
     mov ss, ax
 
@@ -26,19 +26,13 @@ global enter_rmode
 
 %endmacro
 
+use32
 enter_rmode:
     call x86_EnterRealMode
-
-    mov ah, 0x0E
-    mov al, 'H'
-    int 0x10
 
     jmp word 0x0:.test
 use16
 .test:
-    mov ah, 0x0E
-    mov al, 'D'
-    int 0x10
 
     cli
     mov eax, cr0

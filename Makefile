@@ -24,6 +24,6 @@ build:
 	@cat bin/bootloader.bin bin/boot.bin bin/kernel.bin > bin/b.bin
 
 clean:
-	@rm -rf *bin/.out
-	@rm -rf *bin/.o
-	@rm -rf *bin/.bin
+	@rm -rf bin/*.out
+	@rm -rf bin/*.o
+	@rm -rf bin/*.bin

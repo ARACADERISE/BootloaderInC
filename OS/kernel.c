@@ -47,7 +47,7 @@ void __attribute__((section("__start"))) main()
         }
     }*/
 
-    //enter_rmode();
+    enter_rmode();
 
     //for(int i = 0; i < 50; i++)
     //    memsetw((unsigned short *)vid_mem + (i * 80), bc, 80);

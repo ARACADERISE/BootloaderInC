@@ -1,8 +1,8 @@
 use16
 global enter_rmode
 
-%include "protocol/gdt/gdt_load.asm"
 %include "protocol/gdt/enter_rmode.asm"
+%include "protocol/gdt/gdt_load.asm"
 %include "protocol/gdt/save_and_load_gdt.asm"
 
 ;
