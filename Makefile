@@ -8,13 +8,13 @@ run: build
 
 build:
 	@nasm boot/boot.asm -f bin -o bin/bootloader.bin
-	@nasm protocol/test.asm -f elf32 -o bin/test.o
+	@nasm protocol/protocol_util.asm -f elf32 -o bin/protocol_util.o
 	@gcc -std=gnu2x ${FLAGS} -o bin/main.o OS/main.c
 	@gcc -std=gnu2x ${FLAGS} -o bin/kernel.o OS/kernel.c
 #@gcc -std=gnu2x ${FLAGS} -o second_stage.o second_stage_boot.c
 #@ld -m elf_i386 -Tlinker2.ld -nostdlib --nmagic -o second_stage.out second_stage.o
-	@ld -m elf_i386 -TOS/linker.ld -nostdlib --nmagic -o bin/boot.out bin/main.o bin/test.o
-	@ld -m elf_i386 -TOS/kernel.ld -nostdlib --nmagic -o bin/kernel.out bin/kernel.o bin/test.o
+	@ld -m elf_i386 -TOS/linker.ld -nostdlib --nmagic -o bin/boot.out bin/main.o bin/protocol_util.o
+	@ld -m elf_i386 -TOS/kernel.ld -nostdlib --nmagic -o bin/kernel.out bin/kernel.o bin/protocol_util.o
 # Literally taking the file and turning it into a binary file
 #@ { head -c 1536 > boot.bin; } < boot.out
 	@objcopy -O binary bin/boot.out bin/boot.bin
