@@ -16,5 +16,5 @@ SECTIONS
         *(COMMON*);
     }
 
-    .sig : AT(0x8F00) {SHORT(0x0);}
+    .sig : AT(0x8F00) {SHORT(0x00);}
 }

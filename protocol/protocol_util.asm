@@ -25,8 +25,6 @@ use16
 
 setting         db 0x0
 
-
-
 global init_bootloader
 use16
 init_bootloader:

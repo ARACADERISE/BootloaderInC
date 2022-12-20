@@ -1,28 +1,22 @@
-
-asm(".code16gcc\n");
-
 /* macros to make our lives easier :D */
 #define bit32_bit16_GDT
 #define default_gdt
 
 #include "../protocol/boot_header.h"
-#include "../protocol/gdt.h"
-
-extern unsigned char symbol[];
-
-//extern void load_gdt();
-extern void init_bootloader(int8 setting);
-extern void enter_rmode();
-extern void enter_pmode();
-extern void do_something(int a);
-extern void print();
 
 void __attribute__((section("__start"))) main()
 {
     init_bootloader(DEFAULT_ALL);
-    //print_str("Second Stage :D\n\0");
 
-    setup_gdt_desc_and_load();
+    /*
+     * TODO: Before we load the GDT, we need to read in X
+     *       amount of sectors for the kernel.
+     *       This is where the "lazy fs" comes in handy. We
+     *       will have the binary for the kernel stored in the "lazy fs",
+     *       along with the packet information over it's size so we can read in
+     *       the correct amount of sectors.
+     * */
+    load_kernel((uint16 *)0x0850);  // 0x0:0x0850=0x8500
 
     while(1);
 }

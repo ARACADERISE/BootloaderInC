@@ -2,7 +2,7 @@ ENTRY(main)
 SECTIONS
 {
     . = 0x7E00;
-    symbol = .;
+    begin_symbol = .;
     .text : AT(0x7E00)
     {
         *(__start*);
@@ -15,6 +15,7 @@ SECTIONS
         *(.data*);
         *(COMMON*);
     }
+    end_symbol = .;
 
-    .sig : AT(0x8600) {SHORT(0x0);}
+    .sig : AT(0x8600) {SHORT(0xFF);}
 }

@@ -1,0 +1,7 @@
+# Second stage information
+second_stage_binary: "bin/main.o"
+second_stage_addr: 0x07E0
+
+# kernel information
+kernel_binary: "bin/kernel.o"
+kernel_addr: 0x0850 # 0x0:0x0850=0x8500
