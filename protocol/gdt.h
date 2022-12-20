@@ -9,7 +9,7 @@
 #include "gdt/gdt.h"
 #endif
 
-static inline void load_kernel(uint16 *kern_addr)
+static inline void load_kernel()
 {
     /*unsigned char *c = (unsigned char *)0x7C00;
     if(*c == 0x31)
@@ -17,7 +17,7 @@ static inline void load_kernel(uint16 *kern_addr)
     __asm__("cli;hlt");*/
 
     setup_gdt_and_gdt_desc();
-    load_32bit((uint16*)kern_addr);
+    load_32bit();
 }
 
 #endif

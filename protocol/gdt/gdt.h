@@ -132,10 +132,10 @@ static _gdt_desc *gdtDesc = (_gdt_desc *)0xAA00;
 
 /* Function call to either load in a new GDT into memory or reference an
  * already-existing GDT that has been previously loaded into memory. */
-extern void save_gdt_and_load(_gdt_desc *gdtDesc, _GDT *gdt, uint16 *kern_addr);
+extern void save_gdt_and_load(_gdt_desc gdtDesc, _GDT gdt);
 
 /* Load the GDT. */
-void load_32bit(uint16 *kern_addr)
+void load_32bit()
 {
     if(gdt == NULL || gdtDesc == NULL || (gdt == NULL && gdtDesc == NULL))
     {
@@ -143,7 +143,7 @@ void load_32bit(uint16 *kern_addr)
         __asm__("cli;hlt");
     }
 
-    save_gdt_and_load(gdtDesc, gdt, (uint16*)kern_addr);
+    save_gdt_and_load(*gdtDesc, *gdt);
 }
 
 /* Setting up the description of the GDT. */

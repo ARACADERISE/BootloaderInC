@@ -6,7 +6,7 @@
 
 void __attribute__((section("__start"))) main()
 {
-    init_bootloader(DEFAULT_ALL);
+    init_bootloader(BIT32_BIT16_DEF_VID_MODE);
 
     /*
      * TODO: Before we load the GDT, we need to read in X
@@ -16,7 +16,7 @@ void __attribute__((section("__start"))) main()
      *       along with the packet information over it's size so we can read in
      *       the correct amount of sectors.
      * */
-    load_kernel((uint16 *)0x0850);  // 0x0:0x0850=0x8500
+    load_kernel();  // 0x0:0x0850=0x8500
 
     while(1);
 }
