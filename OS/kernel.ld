@@ -1,4 +1,4 @@
-ENTRY(main)
+ENTRY(kmain)
 SECTIONS
 {
     . = 0x9000;
@@ -16,5 +16,6 @@ SECTIONS
         *(COMMON*);
     }
 
+    // Should we remove this?
     .sig : AT(0x9800) {SHORT(0x00);}
 }

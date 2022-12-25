@@ -16,7 +16,7 @@ void __attribute__((section("__start"))) main()
      *       along with the packet information over it's size so we can read in
      *       the correct amount of sectors.
      * */
-    load_kernel();  // 0x0:0x0850=0x8500
+    load_kernel();
 
     while(1);
 }

@@ -30,7 +30,7 @@ extern unsigned short get_text_value(unsigned char character, unsigned char fore
 	return character | (get_text_attribute(foreground, background) << 8);
 }
 
-void __attribute__((section("__start"))) main()
+void __attribute__((section("__start"))) kmain()
 {
 
     unsigned char *vid_mem = (unsigned char *)0xB8000;

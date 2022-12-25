@@ -8,6 +8,8 @@
 //**********************************
 // *      Common Functionality     *
 // *********************************
+#define halt            __asm__("cli;hlt");
+
 uint8 grab_byte_s(uint16 bytes, uint8 pos)
 {
     /* Be safe. */
@@ -18,6 +20,7 @@ uint8 grab_byte_s(uint16 bytes, uint8 pos)
 
     return (bytes >> (8 * (pos - 1)) & 0xFF);
 }
+
 uint8 grab_byte_i(uint32 bytes, uint8 pos)
 {
     /* Be safe. */
@@ -28,15 +31,41 @@ uint8 grab_byte_i(uint32 bytes, uint8 pos)
     
     return (bytes >> (8 * (pos - 1)) & 0xFF);
 }
-void memsetw(uint16 *array, uint16 value)
+
+/* The variable passed to `array` has to be declared as:
+ * uint16 array[size]
+ * */
+void memsetw(uint16 *array, uint16 value, size count)
 {
-    for(size i = 0; i < sizeof(array)/sizeof(array[0]); i++)
-        array[i] = value;
+    size i = 0;
+
+    /* If the count is greater than the array length, do nothing. */
+    if(sizeof(array)/sizeof(array[0]) < count)
+        return;
+    
+    while(count > 0)
+    {
+        array[++i] = value;
+        count--; 
+    }
 }
-void memsetd(uint32 *array, uint32 value)
+
+/* The variable passed to `array` has to be declared as:
+ * uint32 array[size]
+ * */
+void memsetd(uint32 *array, uint32 value, size count)
 {
-    for(size i = 0; i < sizeof(array)/sizeof(array[0]); i++)
-        array[i] = value;
+    size i = 0;
+
+    /* If the count is greater than the array length, do nothing. */
+    if(sizeof(array)/sizeof(array[0]) < count)
+        return;
+
+    while(count > 0)
+    {
+        array[++i] = value;
+        count--; 
+    }
 }
 
 // **********END OF COMMON FUNCTIONALITY**********

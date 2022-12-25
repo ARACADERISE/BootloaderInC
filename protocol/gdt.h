@@ -16,6 +16,9 @@ static inline void load_kernel()
         print_str("YES");
     __asm__("cli;hlt");*/
 
+    // Load in any needed memory
+    //load_needed_memory(dri);
+
     setup_gdt_and_gdt_desc();
     load_32bit();
 }
