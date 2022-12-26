@@ -16,6 +16,6 @@ SECTIONS
         *(COMMON*);
     }
 
-    // Should we remove this?
-    .sig : AT(0x9800) {SHORT(0x00);}
+    /* Should we remove this? */
+    .sig : AT(0x9801) {SHORT(0x00);}
 }
