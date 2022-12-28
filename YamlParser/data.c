@@ -9,7 +9,7 @@ void init_yaml_data()
     yaml_file_data->next        	= NULL;
     yaml_file_data->previous    	= NULL;	
 
-	all_yaml_data 					= yaml_file_data;
+    all_yaml_data 			= yaml_file_data;
 }
 
 void new_yaml_data(unsigned char *user_def, unsigned short *data, enum data_types type)
@@ -39,13 +39,16 @@ void new_yaml_data(unsigned char *user_def, unsigned short *data, enum data_type
     
     /* Assign current yaml_file_data struct to the next _data reference. */
     yaml_file_data = yaml_file_data->next;
+
+	/* Make the `next` NULL because there might not be another `next`. */
+	yaml_file_data->next = NULL;
     
     /* Allocate memory for previous _data struct and assign to `prev`. */
     yaml_file_data->previous     = calloc(1, sizeof(*yaml_file_data->previous));
     yaml_file_data->previous     = prev;
 
-	/* Increment the size of `yaml_file_data`. */
-	yaml_file_data_size++;
+    /* Increment the size of `yaml_file_data`. */
+    yaml_file_data_size++;
 }
 
 static inline size determine_size(enum data_types type)
@@ -69,23 +72,23 @@ static inline lsize convert_hex_to_dec(uint8 *hex)
 	lsize dec = 0;
 	lsize base = 1;
 	for(uint32 i = strlen(hex)-1; i > 0; i--)
-    {
-        if(hex[i] >= '0' && hex[i] <= '9')
-        {
-            dec += (hex[i] - 48) * base;
-            base *= 16;
-        }
-        else if(hex[i] >= 'A' && hex[i] <= 'F')
-        {
-            dec += (hex[i] - 55) * base;
-            base *= 16;
-        }
-        else if(hex[i] >= 'a' && hex[i] <= 'f')
-        {
-            dec += (hex[i] - 87) * base;
-            base *= 16;
-        }
-    }
+    	{
+		if(hex[i] >= '0' && hex[i] <= '9')
+		{
+		    dec += (hex[i] - 48) * base;
+		    base *= 16;
+		}
+		else if(hex[i] >= 'A' && hex[i] <= 'F')
+		{
+		    dec += (hex[i] - 55) * base;
+		    base *= 16;
+		}
+		else if(hex[i] >= 'a' && hex[i] <= 'f')
+		{
+		    dec += (hex[i] - 87) * base;
+		    base *= 16;
+		}
+   	}
 
 	return dec;
 }
@@ -94,9 +97,6 @@ _yaml_os_data get_yaml_os_info()
 {
 	/* Init _yaml_os_data. */
 	_yaml_os_data os_data;
-
-	/* Make the last `next` NULL. */
-	yaml_file_data->next = NULL;
 
 	/* Point to the first instance of `yaml_file_data`. */
 	yaml_file_data = all_yaml_data;
@@ -114,9 +114,6 @@ _yaml_os_data get_yaml_os_info()
 	}
 	for(uint32 i = 0; i < yaml_file_data_size; i++)
 		_back
-
-	/* Current data size. */
-	//size current_size = 0;
 
 	/* Check the type of OS. */
 	if(strcmp((uint8*)yaml_file_data->val_data, "32bit") == 0) os_data.type = 0x02;

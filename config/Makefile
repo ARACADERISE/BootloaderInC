@@ -5,7 +5,8 @@ CC = gcc
 HIDE = @
 
 build:
-	$(HIDE)$(CC) ../YamlParser/src/parser.c ../YamlParser/src/data.c ../YamlParser/src/lexer.c config.c -o ../bin/main.o
-	$(HIDE)./../bin/main.o
+	$(HIDE)$(CC) ../YamlParser/parser.c ../YamlParser/data.c ../YamlParser/lexer.c config.c -o ../bin/config.o
+	$(HIDE)./../bin/config.o
+
 clean:
 	rm -rf *.o
