@@ -6,7 +6,8 @@
 
 void __attribute__((section("__start"))) main()
 {
-    init_bootloader(BIT32_BIT16_DEF_VID_MODE);
+    init_bootloader(CLEAN_GDT_DEF_VID_MODE);
+    //init_bootloader(BIT32_BIT16_DEF_VID_MODE);
 
     /*
      * TODO: Before we load the GDT, we need to read in X

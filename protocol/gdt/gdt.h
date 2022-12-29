@@ -16,15 +16,15 @@ static unsigned char *gdt_status = (unsigned char *)0xC000;
 /* Enum of different types of GDT. */
 enum GDT_TYPE {
     clean_gdt           =   0x1,
-    bit32_bit16_gdt     =   0x2,
-    bit32_only_gdt      =   0x3,
+    bit32_bit16_gdt     =   0x10,
+    bit32_only_gdt      =   0x2,
 };
 
 /* Video mode? */
 enum VID_MODE
 {
-    B8000               =   0x4,          // Default
-    VESA_VID_MODE       =   0x5,
+    B8000               =   0x20,          // Default
+    VESA_VID_MODE       =   0x3,
 };
 
 /* GDT information, such as what type of GDT, whether or not the user want
@@ -210,7 +210,7 @@ static inline void setup_gdt_and_gdt_desc()
 #else
     if(*gdt_status == 0)
     {
-        print_str("Error in `setup_gdt_desc`:\nDid you forget to `init_bootloader`?");
+        print_str("Error in `setup_gdt_desc`:\n  Did you forget to `init_bootloader`?\n  Perhaps you forgot to setup your GDT?\n\nFor future reference, put `#define default_gdt` if you want Moca Protocol to \nfill out your GDT.\n");
         __asm__("cli;hlt");
     }
 #endif
