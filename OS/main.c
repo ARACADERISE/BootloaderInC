@@ -17,7 +17,12 @@ void __attribute__((section("__start"))) main()
      *       along with the packet information over it's size so we can read in
      *       the correct amount of sectors.
      * */
-    load_kernel();
+    //load_kernel();
+    print("Hey1\n");
+    print("Hey2\n");
+
+    init_mouse_data();
+    poll_mouse_until(0xFF41, 0x21);
 
     while(1);
 }

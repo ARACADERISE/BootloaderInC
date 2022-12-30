@@ -17,5 +17,5 @@ SECTIONS
     }
 
     /* Should we remove this? */
-    .sig : AT(0x9801) {SHORT(0x00);}
+    .sig : AT(0x9A01) {SHORT(0x00);}
 }

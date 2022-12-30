@@ -17,5 +17,5 @@ SECTIONS
     }
     end_symbol = .;
 
-    .sig : AT(0x8801) {SHORT(0xFF);}
+    .sig : AT(0x8A01) {SHORT(0xFF);}
 }

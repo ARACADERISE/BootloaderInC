@@ -104,6 +104,11 @@ _yaml_os_data get_yaml_os_info()
 	/* Index of `needed_names`. */
 	size ind = 0;
 
+	/* Check and make sure the amount of data we obtained from the yaml file
+	 * is equal to(or greater than) the amount of data we require. 
+	 * */
+	yaml_assert(yaml_file_data_size >= sizeof(needed_names)/sizeof(needed_names[0]), "\n\nError:\n\tMissing some information in `boot.yaml`.\n")
+
 	/* Make sure all the names exist, in order. */
 	for(uint32 i = 0; i < yaml_file_data_size; i++)
 	{
